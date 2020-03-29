@@ -1,9 +1,9 @@
-const { Client } = require('pg');
-const pgp = require('pg-promise');
+import { Client } from 'pg';
+// const pgp = require('pg-promise');
 
 var connectionString = 'postgres://darshan:darshan123@localhost:5433/viact';
 
-const client = new Client ({
+export const client = new Client ({
 	connectionString: connectionString
 });
 
@@ -14,13 +14,3 @@ client.connect(err => {
 		console.log('Connected to database!');
 	}
 });
-
-/*
-client.query('SELECT * FROM owner_info', (err, result) => {
-	if (err) {
-		console.log('Error\n - ', err);
-	} else {
-		console.log(result.rows);
-	}
-});
-*/
