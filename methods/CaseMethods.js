@@ -1,5 +1,6 @@
 import { client } from '../models/database.js';
 import { generateRandomId } from './CommonMethods';
+import { changeOfficerStatusToFree } from './PoliceMethods';
 
 export const createReport = function (params) {
 	
@@ -73,3 +74,24 @@ export const getCaseInformationById = function (params) {
 		});
 	});	
 }
+
+export const deleteCaseById = function (params) {
+	const id = params.caseId;
+	return new Promise ((resolve, reject) => {
+		const query = `UPDATE case_info SET bike_status = 'CLOSED' where id='${id}';`;
+		client.query(`${query}`, (err, res) => {
+			if (err) {
+				reject(err);
+			} else {
+                changeOfficerStatusToFree(params).then( (response) => {
+                    console.log('DSA');
+                    resolve(response);
+                }).catch(err => {
+                    console.log('pp');
+                    reject(err);
+                });
+			}
+		});
+	});	
+}
+

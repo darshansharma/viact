@@ -1,6 +1,6 @@
 import { createReport, getAllCasesInformation, 
-        getCaseInformationById } from '../methods/CaseMethods';
-
+        getCaseInformationById, deleteCaseById } from '../methods/CaseMethods';
+        
 module.exports = function (app) {
 	app.post("/create-report", (req, res) => {
 		const params = req.query;
@@ -26,5 +26,14 @@ module.exports = function (app) {
 		}).catch(err => {
 			res.send(err);
 		});
-	});
+    });
+    
+    app.post("/delete-case", (req, res) => {
+        const params = req.query;
+        deleteCaseById(params).then((response) => {
+            res.send(response);
+        }).catch ((err) => {
+            res.send(err);
+        });
+    });
 }

@@ -86,3 +86,29 @@ export const getOfficerAndCaseInformation = function () {
 		});
 	});	
 }
+
+export const changeOfficerStatusToFree = function (params) {
+    const caseId = params.caseId;
+    let query = `UPDATE police_case_info SET officer_status='FREE' where case_id='${caseId}'`; 
+	return new Promise ((resolve, reject) => {
+		client.query(`${query}`, (err, res) => {
+			if (err) {
+                console.log('Error - ', err);
+				reject(err);
+			} else if (res.rowCount == 1){
+                query = `UPDATE police_info SET officer_status='FREE' where id=
+                        (SELECT police_id from police_case_info where case_id='${caseId}');`;
+                client.query(`${query}`, (err, res) => {
+                    if (err) {
+                        reject(err);
+                    } else {
+                        resolve('Officer status changed to FREE');
+                    }
+                })
+			} else {
+                console.log('No officer currently working on this case');
+                reject ('No officer currently working on this case');
+            }
+		});
+	});	
+}
