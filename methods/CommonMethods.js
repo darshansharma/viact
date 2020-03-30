@@ -1,3 +1,5 @@
+import { client } from '../models/database.js';
+
 export function generateRandomId(length) {
 	let randString = '';
 	const allowedChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -10,7 +12,7 @@ export function generateRandomId(length) {
 
 export function checkValidCaseId(caseId) {
 	let query = `SELECT * FROM case_info where id = '${caseId}';`;
-	return new Promise ( (resolve, reject) => {
+	return new Promise ((resolve, reject) => {
 		client.query(`${query}`, (err, res) => {
 			if (err) {
 				console.log('Error - ', err);
@@ -27,7 +29,7 @@ export function checkValidCaseId(caseId) {
 
 export function checkValidPoliceId(id) {
 	let query = `SELECT * FROM police_info where id = '${id}';`;
-	return new Promise( (resolve, reject) => {
+	return new Promise((resolve, reject) => {
 		client.query(`${query}`, (err, res) => {
 			if (err) {
 				console.log('Error- ', err);
@@ -44,14 +46,14 @@ export function checkValidPoliceId(id) {
 }
 
 export function getFreeOfficerId() {
-	let query = `SELECT * FROM police_info WHERE officer_status='FREE';`;
-	return new Promise( (resolve, reject) => {
-		client.query(`${query}`, (err, res) => {
+    let query = `SELECT * FROM police_info WHERE officer_status='FREE';`;
+	return new Promise((resolve, reject) => {
+		client.query(query, (err, res) => {
 			if (err) {
 				reject(err);
 			} else if (res.rowCount >= 1) {
 				const rowIndex = Math.floor((Math.random() * res.rowCount)) // selecting officer randomly
-				const id = res.rows ? res.rows[rowIndex].id : 0;
+                const id = res.rows ? res.rows[rowIndex].id : 0;
 				resolve(id);
 			} else {
 				console.log('Error - No free officer right now');

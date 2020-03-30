@@ -28,13 +28,13 @@ export const createReport = function (params) {
 							'${bikeNo}', '${bikeDescription}', '${stolenFrom}', 
 							'${stolenDate}', '${reportDate}', '${ownerId}', '${bikeStatus}');`
 
-		client.query(`${ownerQuery}`, (err, res) => {
+		client.query(ownerQuery, (err, res) => {
 			if (err) {
 				reject('Error while inserting data in owner_info - ', err);
 			} else {
 				console.log('Data inserted successfully in owner_info');
 
-				client.query(`${caseQuery}`, (err, res) => {
+				client.query(caseQuery, (err, res) => {
 					if (err) {
 						reject('Error while inserting data in case_info', err);
 					} else {
@@ -51,7 +51,7 @@ export const createReport = function (params) {
 export const getAllCasesInformation = function () {
 	const query = `SELECT * FROM case_info;`;
 	return new Promise ((resolve, reject) => {
-		client.query(`${query}`, (err, res) => {
+		client.query(query, (err, res) => {
 			if (err) {
 				reject(err);
 			} else {
@@ -65,7 +65,7 @@ export const getCaseInformationById = function (params) {
 	const id = params.caseId;
 	return new Promise ((resolve, reject) => {
 		const query = `SELECT * FROM case_info where id='${id}';`;
-		client.query(`${query}`, (err, res) => {
+		client.query(query, (err, res) => {
 			if (err) {
 				reject(err);
 			} else {
@@ -79,15 +79,13 @@ export const deleteCaseById = function (params) {
 	const id = params.caseId;
 	return new Promise ((resolve, reject) => {
 		const query = `UPDATE case_info SET bike_status = 'CLOSED' where id='${id}';`;
-		client.query(`${query}`, (err, res) => {
+		client.query(query, (err, res) => {
 			if (err) {
 				reject(err);
 			} else {
                 changeOfficerStatusToFree(params).then( (response) => {
-                    console.log('DSA');
                     resolve(response);
                 }).catch(err => {
-                    console.log('pp');
                     reject(err);
                 });
 			}
